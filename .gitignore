@@ -1,0 +1,5 @@
+CMakeFiles/
+cmake-build-*
+*.out
+.idea
+*.o

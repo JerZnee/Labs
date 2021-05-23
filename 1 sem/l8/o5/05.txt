@@ -1,0 +1,3 @@
+12
+[1]    13852 floating point exception (core dumped)  ./main
+
