@@ -12,16 +12,15 @@ void prompt(){
     printf("> ");
 }
 
-
 void usage(){
     puts("Справка:");
     puts("\th - вывести справку");
-    puts("\to <KEY_FILENAME> <DATA_FILENAME> - open files with specified names");
+    puts("\to <KEY_FILENAME> <DATA_FILENAME> - открыть файл");
     puts("\tr - развернуть массив");
     puts("\ts - сортировать");
     puts("\tm - перемешать массив");
-    puts("\tp [NUMBER] - print array(or specified element of array)");
-    puts("\tb <VALUE> - binary search in array");
+    puts("\tp [NUMBER] - напечатать массив(или элемент массива)");
+    puts("\tb <VALUE> - бинарный поиск");
     puts("\tf - очистить массив");
     puts("\tq - звершить программу");
 }
@@ -129,9 +128,8 @@ int main(){
             usage();
             continue;
         }
-        if(arr == NULL && cmd != 'o'){
-            puts("Неверный ключ, попробуйте еще раз");
-            usage();
+        if(arr == NULL && cmd == 'r' && cmd == 's' && cmd == 'm' && cmd == 'p' && cmd == 'b' && cmd == 'f'){
+            puts("Массив пуст, используйте: \no <KEY_FILENAME> <DATA_FILENAME> - открыть файл");
             continue;
         }
 
