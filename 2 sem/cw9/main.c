@@ -1,3 +1,4 @@
+#define  _GNU_SOURCE
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
@@ -121,18 +122,24 @@ int main(){
     while (true){
         prompt();
         cmd = (char)getchar();
+        if(cmd == EOF){
+            break;
+        }
         while(cmd == ' ' || cmd == '\n') cmd = (char)getchar(); // skip whitespaces
 
-        if(cmd == 'q')break;
+        if(cmd == 'q') break;
         if(cmd == 'h'){
             usage();
             continue;
         }
-        if(arr == NULL && cmd == 'r' && cmd == 's' && cmd == 'm' && cmd == 'p' && cmd == 'b' && cmd == 'f'){
+        if(arr == NULL && cmd == 'r' && cmd == 's' && cmd == 'm' && cmd == 'p' && cmd == 'b'){
             puts("Массив пуст, используйте: \no <KEY_FILENAME> <DATA_FILENAME> - открыть файл");
             continue;
         }
-
+ 	    if(arr == NULL && cmd == 'f'){
+            puts("Массив уже очищен");
+            continue;
+        }
         string sbuf, ssbuf;
         size_t ibuf;
         size_t index;

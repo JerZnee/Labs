@@ -87,7 +87,7 @@ void array_print(array *arr){
 void array_shuffle(array *arr){
     for (size_t i = 0; i < arr->len-1; ++i) {
         for (size_t j = i+1; j < arr->len; ++j) {
-            if((unsigned long)random() & 1u){
+            if((unsigned long)rand() & 1u){
                 array_node_swap(arr->array, i, j);
             }
         }
