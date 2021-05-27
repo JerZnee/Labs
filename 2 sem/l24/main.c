@@ -47,7 +47,9 @@ void print_expression(tree t) {
         print_token(tree_get_value(left));
         printf(")");
     } else if (tk.type == OPERATOR && tk.data.operator == '/') {
+        printf("(");
         print_expression(left);
+        printf(")");
         print_token(tk);
         printf("(");
         print_expression(right);
@@ -81,8 +83,13 @@ bool is_integer(double a) {
     return (double) (int) a == a;
 }
 
-tree get_sum(tree t, double power) {
-    tree tmp = tree_copy(tree_get_left(t));
+tree get_sum(tree t, double power, bool left) {
+    tree tmp;
+    if(left) {
+         tmp = tree_copy(tree_get_left(t));
+    } else{
+        tmp = tree_copy(tree_get_right(t));
+    }
     if (power == 0) {
         token tk;
         tk.type = CONST;
@@ -100,7 +107,7 @@ tree get_sum(tree t, double power) {
         token tk;
         tk.type = OPERATOR;
         tk.data.operator = op;
-        tmp = tree_build(tmp, tk, tree_copy(tree_get_left(t)));
+        tmp = tree_build(tmp, tk, tree_copy(left ? tree_get_left(t) : tree_get_right(t)));
     }
     return tmp;
 }
@@ -117,12 +124,22 @@ tree change_tree(tree t) {
     if (tree_get_value(t).type == OPERATOR && tree_get_value(t).data.operator == '*') {
         if (tree_get_value(right).type == CONST && is_integer(tree_get_value(right).data.value)) {
             double power = tree_get_value(right).data.value;
-            tree tmp = get_sum(t, power);
+            tree tmp = get_sum(t, power, true);
             return tmp;
         } else if (tree_get_value(right).type == OPERATOR && tree_get_value(right).data.operator == '~'
                    && is_integer(tree_get_value(tree_get_left(right)).data.value)) {
             double power = -tree_get_value(tree_get_left(right)).data.value;
-            tree tmp = get_sum(t, power);
+            tree tmp = get_sum(t, power, true);
+            return tmp;
+        }
+        else if(tree_get_value(left).type == CONST && is_integer(tree_get_value(left).data.value)){
+            double power = tree_get_value(left).data.value;
+            tree tmp = get_sum(t, power, false);
+            return tmp;
+        } else if (tree_get_value(left).type == OPERATOR && tree_get_value(left).data.operator == '~'
+                   && is_integer(tree_get_value(tree_get_left(left)).data.value)) {
+            double power = -tree_get_value(tree_get_left(left)).data.value;
+            tree tmp = get_sum(t, power, false);
             return tmp;
         }
     }
