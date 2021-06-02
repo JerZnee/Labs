@@ -1,6 +1,6 @@
 #ifndef _LIST_H
 #define _LIST_H
-
+#include <stdbool.h>
 #include "list_it.h"
 
 void     list_create        (List* l);

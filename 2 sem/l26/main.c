@@ -1,47 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lin.h"
+#include "list.h"
+#include "list_it.h"
+#include "iter.h"
 
-void permute(List *list, Node *node) {
-    Node *next_node = next(list, node);
-    if (node->val <= next_node->val) {
-        float tmp = next_node->val; // tmp = get(i+1)
-        next_node->val = node->val; // set(i+1, get(i))
-        node->val = tmp;  // set(i, tmp)
-        return;
-    }
+void swap(iterator* first, iterator* second) {
+    float tmp = iter_get_value(*first); // tmp = get(i+1)
+    iter_set_value(first, iter_get_value(*second)); // set(i+1, get(i))
+    iter_set_value(second, tmp);  // set(i, tmp)
 }
 
 List *bubbleSort(List *list) {
-    int len = (int)length(list);
+    int len = list_size(list);
 
     if (len == 0) {
         return NULL;
     } else if (len == 1) {
         return list;
     }
-    List *ans = create();
-    for (int i = len - 1; i >= 0; --i) {
-        Node *cur_node = get(list, getElement(list, 0));
-        for (int j = 0; j < i; ++j) {
-            permute(list, cur_node);
-            cur_node = next(list, cur_node);
+    List* ans = malloc(sizeof(List));
+    list_create(ans);
+    for (int i = 1; i < len; i++) {
+        iterator first = iter_begin(list);
+        iterator second = iter_next(first);
+        for (int j = 0; j < len-i; j++) {
+            if(iter_get_value(first) > iter_get_value(second)){
+                swap(&first, &second);
+            }
+            first = second;
+            second = iter_next(second);
         }
-        push(ans, cur_node->val);
+        list_push_front(ans, iter_get_value(first));
     }
     return ans;
 }
 
 int main() {
-    List *list = create();
+    List list;
+    list_create(&list);
     float n;
-    scanf("%f", &n);
-    push(list, n);
     while (scanf("%f", &n) > 0) {
-        push(list, n);
+        list_push_back(&list, n);
     }
-    List *ans = bubbleSort(list);
-    printList(ans);
-    deleteList(list);
+    List* ans = bubbleSort(&list);
+    list_print(ans);
+    list_destroy(ans);
+    list_destroy(&list);
     return 0;
 }

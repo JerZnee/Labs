@@ -3,4 +3,4 @@ project(8 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(8 main.c list.h list.c list_it.h iter.c iter.h)
+add_executable(8 main.c list.c iter.c)

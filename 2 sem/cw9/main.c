@@ -8,7 +8,6 @@
 #include <time.h>
 
 
-
 void prompt(){
     printf("> ");
 }
@@ -99,16 +98,13 @@ size_t bin_search(array* arr, int_8 value){
 
     while(r-l > 1){
         m = (l+r) / 2;
-        if(arr->array[m].key > value){
+        if(arr->array[m].key < value){
+            l = m;
+        }else {
             r = m;
-        }else if(arr->array[m].key < value){
-            l = m;
-        } else{
-            l = m;
-            break;
         }
     }
-    return l;
+    return r;
 }
 
 int main(){

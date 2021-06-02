@@ -147,14 +147,3 @@ bool list_sorted(List* l){
     }
     return true;
 }
-void delete_last_k_elements(List *list, int k)
-{
-    if (list_size(list) < k) {
-        printf("Длина списка меньше, чем k.\n");
-    } else {
-        for (int i = 0; i < k; i++) {
-            iter_last_elem(list);
-            list_delete(list, list_size(list) - 1);
-        }
-    }
-}
