@@ -112,42 +112,7 @@ void list_pop_back(List* l){
     list_delete(l, list_size(l) - 1);
 }
 
-bool list_sorted(List* l){
-    if (list_size(l) <= 2){
-        return true;
-    }
-    iterator left = iter_begin(l);
-    iterator right = iter_next(left);
-    while (iter_get_value(left) == iter_get_value(right)){
-        right = iter_next(right);
-        if (iter_is_equal(right, iter_end(l))){
-            return true;
-        }
-    }
-    bool increase;
-    if (iter_get_value(left) < iter_get_value(right)){
-        increase = true;
-    } else {
-        increase = false;
-    }
-    left = right;
-    right = iter_next(right);
-    while (!iter_is_equal(right, iter_end(l))){
-        if (iter_get_value(left) < iter_get_value(right)){
-            if (!increase){
-                return false;
-            }
-        } else if (iter_get_value(left) > iter_get_value(right)){
-            if (increase){
-                return false;
-            }
-        }
-        left = right;
-        right = iter_next(right);
-    }
-    return true;
-}
-void delete_last_k_elements(List *list, int k)
+void list_delete_last_k_elements(List *list, int k)
 {
     if (list_size(list) < k) {
         printf("Длина списка меньше, чем k.\n");

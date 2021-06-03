@@ -15,6 +15,6 @@ void     list_push_back     (List* l, float value);
 void     list_pop_front     (List* l);
 void     list_pop_back      (List* l);
 void     list_delete        (List* l, int index);
-bool     list_sorted        (List* l);
+void     list_delete_last_k_elements(List *list, int k);
 
 #endif

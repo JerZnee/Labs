@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,14 +10,14 @@
 
 void help(){
     printf("команды:\n");
-    printf("add {float value} {index} - to add element in a list on <index> position\n");
-    printf("\taddf {float value} - to push front element to a list\n");
-    printf("\taddb {float value} - to push back element to a list\n");
+    printf("insert {float value} {index} - to add element in a list on <index> position\n");
+    printf("\tpushf {float value} - to push front element to a list\n");
+    printf("\tpushb {float value} - to push back element to a list\n");
     printf("delete {index} - to delete element from <index> position in a list\n");
     printf("\tpopf - to pop front element of a list\n");
     printf("\tpopb - to pop back element of a list\n");
     printf("print - to print a list\n");
-    printf("task {unsigned  int value} - to delete <unsigned  int value> elements in a list\n"); //todo
+    printf("task {unsigned  int value} - to delete <unsigned  int value> elements in a list\n");
     printf("help - for help\n");
     printf("exit - exit\n");
 }
@@ -50,16 +51,18 @@ int main(){
             }
             // Сравниваем команды
             if (strcmp(cmd, "insert") == 0) {
-                char *es;
-                float value = strtof(arg1, &arg_invalid);
-                int index = (int)strtol(arg2, &es, 10);
-                if(arg1 != arg_invalid || arg2 != es) {
-                    if (index < 0 || index > list_size(&l)) {
-                        puts("invalid index");
-                    } else {
-                        list_insert(&l, index, value);
-                    }
-                } else puts("invalid index or value");
+                if (arg1 != NULL && arg2 != NULL) {
+                    char *es;
+                    float value = strtof(arg1, &arg_invalid);
+                    int index = (int) strtol(arg2, &es, 10);
+                    if (arg1 != arg_invalid && arg2 != es) {
+                        if (index < 0 || index > list_size(&l)) {
+                            puts("invalid index");
+                        } else {
+                            list_insert(&l, index, value);
+                        }
+                    } else puts("invalid index or value");
+                } else puts("You forgot to provide an arguments");
 
             } else if (strcmp(cmd, "pushf") == 0) {
                 if (arg1 != NULL){
@@ -79,12 +82,14 @@ int main(){
 
             } else if (strcmp(cmd, "print") == 0) {
                 list_print(&l);
-            } else if (strcmp(cmd, "delete") == 0) {
-                int index = (int)strtol(arg1, &arg_invalid, 10);
-                if(arg1 != arg_invalid && index < 0 || index >= list_size(&l)) {
-                    list_delete(&l, index);
-                } else puts("invalid index");
 
+            } else if (strcmp(cmd, "delete") == 0) {
+                if (arg1 != NULL) {
+                    int index = (int)strtol(arg1, &arg_invalid, 10);
+                    if (arg1 != arg_invalid && index >= 0 && index < list_size(&l)) {
+                        list_delete(&l, index);
+                    } else puts("invalid index");
+                } else puts("You forgot to provide an argument");
             } else if (strcmp(cmd, "popf") == 0){
                 list_pop_front(&l);
 
@@ -95,11 +100,15 @@ int main(){
                 printf("list size = %d\n", list_size(&l));
 
             } else if (strcmp(cmd, "exit") == 0) {
-                free(str);
-                list_destroy(&l);
                 break;
-            } else if (strcmp(cmd, "task") == 0) {
 
+            } else if (strcmp(cmd, "task") == 0) {
+                if (arg1 != NULL) {
+                    int k = (int)strtol(arg1, &arg_invalid, 10);
+                    if (arg1 != arg_invalid && k >= 0 && k < list_size(&l)) {
+                        list_delete_last_k_elements(&l, k);
+                    } else puts("invalid k");
+                } else puts("You forgot to provide an argument");
 
             } else if (strcmp(cmd, "help") == 0) {
                 help();
@@ -110,12 +119,9 @@ int main(){
                 puts("Нет такой команды");
             }
         } else if (getline(&str, &buf_size, stdin) == -1) { //ctrl D
-            free(str);
-            list_destroy(&l);
             break;
         }
     }
     list_destroy(&l);
-    help();
     return 0;
 }
